@@ -61,6 +61,11 @@ public class DrawGameElements extends JPanel {
         super.paintComponent(g);
         g.clearRect(0, 0, getWidth(), getHeight());
         drawGrid(g);
+        drawXO(g);
+        drawWinLine(g);
+    }
+
+    private void drawXO(Graphics g) {
         for (int i = 0; i < side; i++) { // row
             for (int j = 0; j < side; j++) { // col
                 if (gameModel.getValue(i, j) == 10) {
@@ -118,7 +123,33 @@ public class DrawGameElements extends JPanel {
         }
     }
 
-    public void drawWinLine(){
+    public void drawWinLine(Graphics g){
+        int res = gameModel.checkWiner();
+        g.setColor(Color.RED);
+        int x = (int)((float)getHeight() / side);
+        int y = (int)((float)getWidth() / side);
+        if (res == FIELD_X * side || res == FIELD_O * side) {
+            g.drawLine(0, 0, getWidth(), getHeight());
+        }
 
+        if (res == -FIELD_X * side || res == -FIELD_O * side) {
+            g.drawLine(getWidth(), 0, 0, getHeight());
+        }
+
+        if (res > FIELD_O * side) {                                     //если результат больше максимального значения значит нужно зачеркнуть строку
+            int dy = (res - FIELD_O * side) * x - x / 2;                //которая получается путём вычитания максимального результата из нашего
+            g.drawLine(0, dy, getWidth(), dy);
+        } else if (res > 30) {
+            int dy = (res - FIELD_X * side) * x - x / 2;
+            g.drawLine(0, dy, getWidth(), dy);
+        }
+
+        if (res < FIELD_X * side) {                                     //если результат меньше максимального значения значит нужно зачеркнуть столбец
+            int dx = (FIELD_X * side - res) * y - y / 2;                //который получается путём вычитания нашего результат из максимально возможного
+            g.drawLine(dx, 0,dx, getHeight());
+        } else if (res < FIELD_O * side) {
+            int dx = (FIELD_O * side - res) * y - y / 2;
+            g.drawLine(dx, 0, dx, getHeight());
+        }
     }
 }

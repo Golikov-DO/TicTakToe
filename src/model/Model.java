@@ -54,11 +54,11 @@ public class Model {
                 }
                 check_i += field[i][j];
                 if (check_i == FIELD_O * side || check_i == FIELD_X * side) {
-                    return check_i + (i + 1);
+                    return check_i + (i + 1);                                       //Возвращаем если все нолики или крестики стали в строку шириной равной ширине поля в строке прибавленной к результату
                 }
                 check_j += field[j][i];
                 if (check_j == FIELD_O * side || check_j == FIELD_X * side) {
-                    return check_j - (i + 1) ;
+                    return check_j - (i + 1) ;                                      //Возвращаем если все нолики или крестики стали в столбец шириной равной ширине поля в столбце отнятому от результата
                 }
             }
         }
