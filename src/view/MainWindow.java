@@ -97,4 +97,8 @@ public class MainWindow {
         frame.add(button);                                                              //добавляем в наше главное окно кнопку
         frame.setVisible(true);                                                         //делаем окно видимым
     }
+
+    public void showWindow() {
+        frame.setVisible(true);
+    }
 }
