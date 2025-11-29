@@ -1,4 +1,120 @@
 package view;
 
-public class DrawGameElements {
+import model.Model;
+
+import javax.swing.*;
+import java.awt.*;
+import static constants.GameConstants.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class DrawGameElements extends JPanel {
+    private final JFrame parentFrame;
+    private final Model gameModel;
+    private final int side;
+    private final int difficulty;
+
+    public DrawGameElements(int width, int height, int difficulty, Model gameModel, JFrame frame) {
+        this.gameModel = gameModel;
+        this.parentFrame = frame;
+        this.difficulty = difficulty;
+        this.side = difficulty == 1 ? 3 : difficulty == 2 ? 5 : difficulty == 3 ? 10 : 3;
+        setPreferredSize(new Dimension(width, height));
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                handleClick(e.getX(), e.getY());
+            }
+        });
+    }
+
+    private void handleClick(int mouseX, int mouseY) {
+        int width = getWidth();
+        int height = getHeight();
+        int cellWidth = width / side;
+        int cellHeight = height / side;
+
+        // Определяем строку и столбец, куда кликнули
+        int col = mouseX / cellWidth;
+        int row = mouseY / cellHeight;
+
+        // Проверяем, что клик в пределах сетки и ячейка пуста (значение 0)
+        //if (row >= 0 && row < 3 && col >= 0 && col < 3 && gameModel.getValue(row, col) == 0) {
+        // Обновляем модель
+        gameModel.setValue(col, row);
+        int winer = gameModel.checkWiner();
+        if (winer != 0) {
+            if (winer >= FIELD_O * side - side && winer <= FIELD_O * side + side){
+                showWiner("O");
+            } else if (winer >= FIELD_X * side - side && winer <= FIELD_X * side + side){
+                showWiner("X");
+            } else showWiner("NON");
+        }
+        // Запрашиваем перерисовку панели (вызовет paintComponent)
+        repaint();
+        //}
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.clearRect(0, 0, getWidth(), getHeight());
+        drawGrid(g);
+        for (int i = 0; i < side; i++) { // row
+            for (int j = 0; j < side; j++) { // col
+                if (gameModel.getValue(i, j) == 10) {
+                    drawX(i, j, g);
+                } else if (gameModel.getValue(i, j) == 200) {
+                    drawO(i, j, g);
+                }
+            }
+        }
+    }
+
+    public void drawGrid(Graphics g) {
+        int width = getWidth();
+        int height = getHeight();
+        int dw = width / side;
+        int dh = height / side;
+        g.setColor(Color.BLUE);
+        for (int i = 1; i < side; i++) {
+            g.drawLine(0, dh * i, width, dh * i);
+            g.drawLine(dw * i, 0, dw * i, height);
+        }
+    }
+
+    public void drawX(int i, int j, Graphics g) {
+        g.setColor(Color.BLACK);
+        int dw = getWidth() / side;
+        int dh = getHeight() / side;
+        int x = i * dw;
+        int y = j * dh;
+        g.drawLine(x, y, x + dw, y + dh);
+        g.drawLine(x, y + dh, x + dw, y);
+        repaint();
+    }
+
+    public void drawO(int i, int j, Graphics g) {
+        g.setColor(Color.BLACK);
+        int dw = getWidth() / side;
+        int dh = getHeight() / side;
+        int x = i * dw;
+        int y = j * dh;
+        g.drawOval(x + 3 * dw / 100, y + 3 * dw / 100, dw * 96 / 100, dh * 96 / 100);
+    }
+
+    public void showWiner(String winer) {
+        String message = NON_WINER;
+        if (winer.equals("X")){
+            message = WINER_X;
+        } else if(winer.equals("O"))
+            message = WINER_O;
+        int answer = JOptionPane.showConfirmDialog(parentFrame, QUESTION, message, JOptionPane.YES_NO_OPTION);
+        if (answer == JOptionPane.NO_OPTION) {
+            parentFrame.dispose(); // Закрывает текущее окно JFrame
+        } else {
+            gameModel.newGame(difficulty);
+        }
+    }
 }

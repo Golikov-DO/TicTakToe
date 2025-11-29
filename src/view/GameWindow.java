@@ -3,6 +3,7 @@ package view;
 import model.Model;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -25,8 +26,12 @@ public class GameWindow {
                 }
             }
         });
+        gameModel.newGame(difficulty);
+
+        DrawGameElements gamePanel = new DrawGameElements(width, height, difficulty, gameModel, frame);
 
         frame.setLocationRelativeTo(null);
+        frame.add(gamePanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
 }
