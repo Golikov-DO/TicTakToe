@@ -117,4 +117,8 @@ public class DrawGameElements extends JPanel {
             gameModel.newGame(difficulty);
         }
     }
+
+    public void drawWinLine(){
+
+    }
 }
