@@ -3,6 +3,7 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.TitledBorder;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -100,5 +101,39 @@ public class MainWindow {
 
     public void showWindow() {
         frame.setVisible(true);
+    }
+
+    public void hideWindow() {
+        frame.setVisible(false);
+    }
+
+    public void addOpenWindowListener(ActionListener actionListener){
+        button.addActionListener(actionListener);
+    }
+
+    public int getNewWindowHeight() {
+        int height = 300;
+        if (difficultyLevel == 2) {
+            height = 500;
+        }
+        if (difficultyLevel == 3) {
+            height = 600;
+        }
+        return height;
+    }
+
+    public int getNewWindowWidth() {
+        int width = 300;
+        if (difficultyLevel == 2) {
+            width = 500;
+        }
+        if (difficultyLevel == 3) {
+            width = 600;
+        }
+        return width;
+    }
+
+    public int getDifficultyLevel() {
+        return difficultyLevel;
     }
 }
