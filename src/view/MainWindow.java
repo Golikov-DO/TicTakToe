@@ -1,5 +1,7 @@
 package view;
 
+import model.Model;
+
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.TitledBorder;
@@ -10,12 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainWindow {
-    String playerChoice;
-    int difficultyLevel;
     private final JFrame frame;
     private final JButton button;
+    private Model gameModel;
 
-    public MainWindow() {
+    public MainWindow(Model gameModel) {
+        this.gameModel = gameModel;
         frame = new JFrame("Крестики Нолики");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(350, 300);
@@ -62,24 +64,33 @@ public class MainWindow {
         }
 
         difficultyBoxes.getFirst().setSelected(true);                               //Устанавливаем первый RadioButton как отмеченный по умолчанию
-        difficultyLevel = 1;                                                        //Присваиваем уровню сложности значение по умолчанию 1
+        gameModel.setDifficulty(1);                                                 //Присваиваем уровню сложности значение по умолчанию 1
+        gameModel.setWidth(300);
+        gameModel.setHeight(300);
         playerBoxes.getFirst().setSelected(true);                                   //Устанавливаем первый RadioButton как отмеченный по умолчанию
-        playerChoice = "PvsP";                                                      //Устанавливаем тип игры по умолчанию как PvsP
+        gameModel.setCurrentMode("PvsP");                                            //Устанавливаем тип игры по умолчанию как PvsP
 
         ItemListener listener = e -> {                                      //Создаём слушателя смены состояния RadioButtonов
             if (e.getStateChange() == ItemEvent.SELECTED) {                           //смотрим какой был изменён
                 for (JRadioButton item : difficultyBoxes) {                           //если из группы сложность
                     if (e.getSource() == item) {
-                        difficultyLevel = difficultyBoxes.indexOf(item) + 1;           //то меняем сложность на соответствующую
+                        gameModel.setDifficulty(difficultyBoxes.indexOf(item) + 1);
+                        if (difficultyBoxes.indexOf(item) + 1 == 2){
+                            gameModel.setWidth(500);
+                            gameModel.setHeight(500);
+                        } else if (difficultyBoxes.indexOf(item) + 1 == 3){
+                            gameModel.setWidth(600);
+                            gameModel.setHeight(600);
+                        }//то меняем сложность на соответствующую
                     }
                 }
                 for (JRadioButton item : playerBoxes) {                                //если из группы выбор игрока
                     if (e.getSource() == item) {
                         int index = playerBoxes.indexOf(item);
                         if (index == 2)
-                            playerChoice = "PvsC";
+                            gameModel.setCurrentMode("PvsC");
                         else if (index == 3)
-                            playerChoice = "CvsC";                                     //то меняем игру на соответствующую
+                            gameModel.setCurrentMode("CvsC");                                     //то меняем игру на соответствующую
                     }
                 }
             }
@@ -92,6 +103,9 @@ public class MainWindow {
         for (JRadioButton item : playerBoxes) {                                         //Добавляем в RadioButton из группы выбор игрока созданного слушателя
             item.addItemListener(listener);
         }
+        button.addActionListener(e -> {
+             frame.dispose(); // Закрываем главное окно после выбора
+        });
 
         frame.add(difficultyLevelPanel);                                                //добавляем в наше главное окно панель сложность
         frame.add(playersOptionPanel);                                                  //добавляем в наше главное окно панель выбор игрока
@@ -107,33 +121,10 @@ public class MainWindow {
         frame.setVisible(false);
     }
 
+    public JButton getStartButton() {
+        return button;
+    }
     public void addOpenWindowListener(ActionListener actionListener){
         button.addActionListener(actionListener);
-    }
-
-    public int getNewWindowHeight() {
-        int height = 300;
-        if (difficultyLevel == 2) {
-            height = 500;
-        }
-        if (difficultyLevel == 3) {
-            height = 600;
-        }
-        return height;
-    }
-
-    public int getNewWindowWidth() {
-        int width = 300;
-        if (difficultyLevel == 2) {
-            width = 500;
-        }
-        if (difficultyLevel == 3) {
-            width = 600;
-        }
-        return width;
-    }
-
-    public int getDifficultyLevel() {
-        return difficultyLevel;
     }
 }

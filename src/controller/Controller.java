@@ -2,34 +2,24 @@ package controller;
 
 import model.Model;
 import view.GameWindow;
-import view.MainWindow;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+public class Controller {
+    private Model gameModel;
+    private GameWindow gameWindow;
 
-public record Controller (MainWindow mainWindow, Model gameModel) implements ActionListener {
-    public Controller(MainWindow mainWindow, Model gameModel){
-        this.mainWindow = mainWindow;
+    public Controller(Model gameModel){
         this.gameModel = gameModel;
-        this.mainWindow.addOpenWindowListener(this);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Логика обработки события
-        if (e.getActionCommand().equals("Начать игру")) {
-            // Контроллер решает, что должно произойти
-            openNewWindow();
+    public void setGameWindow(GameWindow gameWindow) {
+        this.gameWindow = gameWindow;
+    }
+
+    public void handleMouseClick(int x, int y) {
+       gameModel.setValue(x, y);
+        // После обновления модели нужно перерисовать игровое окно
+        if (gameWindow != null) {
+            gameWindow.redraw();
         }
-    }
-
-    private void openNewWindow() {
-        mainWindow.hideWindow();
-        int width = mainWindow.getNewWindowWidth();
-        int height = mainWindow.getNewWindowHeight();
-        int difficulty = mainWindow.getDifficultyLevel();
-        // Создание и отображение нового окна.
-        new GameWindow(width, height, difficulty, mainWindow, gameModel);
-        mainWindow.hideWindow();
     }
 }

@@ -4,6 +4,10 @@ import static constants.GameConstants.*;
 
 public class Model {
     private int side = 3;
+    private int difficulty;
+    private String currentMode;
+    private int width;
+    private int height;
 
     int[][] field;
     public boolean isTurnX;
@@ -13,7 +17,23 @@ public class Model {
         isTurnX = true;
     }
 
-    public void newGame (int difficulty){
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setCurrentMode(String currentMode) {
+        this.currentMode = currentMode;
+    }
+
+    public void newGame (){
         this.side = difficulty == 1 ? 3 : difficulty == 2 ? 5 : difficulty == 3 ? 10 : 3;
         field = new int[side][side];
         isTurnX = true;
@@ -28,6 +48,22 @@ public class Model {
 
     public int getValue(int row, int col) {
         return field[col][row];
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public String getCurrentMode() {
+        return currentMode;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public int checkWiner() {

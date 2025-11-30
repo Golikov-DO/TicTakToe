@@ -1,37 +1,42 @@
 package view;
 
+import controller.Controller;
 import model.Model;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class GameWindow {
-    private final MainWindow mainWindow;
+    private final Controller controller;
+    private DrawGameElements drawPanel;
 
-    public GameWindow(int width, int height, int difficulty, MainWindow mainWindow, Model gameModel) {
-        this.mainWindow = mainWindow;                            //Получаем главное окно
+    public GameWindow(Model gameModel, Controller controller) {
+        this.controller = controller;
+        this.drawPanel = new DrawGameElements(gameModel);
+
+        this.controller.setGameWindow(this);
 
         JFrame frame = new JFrame("Новое окно");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Закрытие только этого окна
-        frame.setSize(width, height);
+        frame.add(drawPanel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
 
-        frame.addWindowListener(new WindowAdapter() {               //Добавляем нового слушателя стандартных кнопок (закрыть свернуть развернуть) этого окна
+        drawPanel.addMouseListener(new MouseAdapter() {
             @Override
-            public void windowClosed(WindowEvent e) {               //при нажатии кнопки закрыть закрываем текущее окно
-                if (GameWindow.this.mainWindow != null) {           //проверяем что MainWindow не закрыто
-                    GameWindow.this.mainWindow.showWindow();        //когда текущее окно полностью закрыто по нажатию кнопки закрыть,
-                                                                    //мы отображаем родительское (главное) окно
-                }
+            public void mouseClicked(MouseEvent e) {
+                // Передаем координаты клика в контроллер
+                controller.handleMouseClick(e.getX(), e.getY());
             }
         });
-        gameModel.newGame(difficulty);
+    }
 
-        DrawGameElements gamePanel = new DrawGameElements(width, height, difficulty, gameModel, frame);
-
-        frame.setLocationRelativeTo(null);
-        frame.add(gamePanel, BorderLayout.CENTER);
-        frame.setVisible(true);
+    public void redraw() {
+        drawPanel.repaint();
     }
 }

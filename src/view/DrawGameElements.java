@@ -5,31 +5,29 @@ import model.Model;
 import javax.swing.*;
 import java.awt.*;
 import static constants.GameConstants.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class DrawGameElements extends JPanel {
-    private final JFrame parentFrame;
     private final Model gameModel;
     private final int side;
-    private final int difficulty;
 
-    public DrawGameElements(int width, int height, int difficulty, Model gameModel, JFrame frame) {
+
+    public DrawGameElements(Model gameModel) {
         this.gameModel = gameModel;
-        this.parentFrame = frame;
-        this.difficulty = difficulty;
+        int difficulty = gameModel.getDifficulty();
+        int width = gameModel.getWidth();
+        int height = gameModel.getHeight();
         this.side = difficulty == 1 ? 3 : difficulty == 2 ? 5 : difficulty == 3 ? 10 : 3;
         setPreferredSize(new Dimension(width, height));
-
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                handleClick(e.getX(), e.getY());
-            }
-        });
     }
 
-    private void handleClick(int mouseX, int mouseY) {
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        drawGrid(g);
+        drawXO(g);
+        drawWinLine(g);
+    }
+   /* private void handleClick(int mouseX, int mouseY) {
         int width = getWidth();
         int height = getHeight();
         int cellWidth = width / side;
@@ -54,16 +52,8 @@ public class DrawGameElements extends JPanel {
         // Запрашиваем перерисовку панели (вызовет paintComponent)
         repaint();
         //}
-    }
+    }*/
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.clearRect(0, 0, getWidth(), getHeight());
-        drawGrid(g);
-        drawXO(g);
-        drawWinLine(g);
-    }
 
     private void drawXO(Graphics g) {
         for (int i = 0; i < side; i++) { // row
@@ -109,7 +99,7 @@ public class DrawGameElements extends JPanel {
         g.drawOval(x + 3 * dw / 100, y + 3 * dw / 100, dw * 96 / 100, dh * 96 / 100);
     }
 
-    public void showWiner(String winer) {
+  /*  public void showWiner(String winer) {
         String message = NON_WINER;
         if (winer.equals("X")){
             message = WINER_X;
@@ -121,7 +111,7 @@ public class DrawGameElements extends JPanel {
         } else {
             gameModel.newGame(difficulty);
         }
-    }
+    }*/
 
     public void drawWinLine(Graphics g){
         int res = gameModel.checkWiner();
