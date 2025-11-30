@@ -7,20 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class GameWindow {
-    private final Controller controller;
-    private DrawGameElements drawPanel;
+    private final DrawGameElements drawPanel;
 
     public GameWindow(Model gameModel, Controller controller) {
-        this.controller = controller;
+        gameModel.newGame();
         this.drawPanel = new DrawGameElements(gameModel);
 
-        this.controller.setGameWindow(this);
+        controller.setGameWindow(this);
 
-        JFrame frame = new JFrame("Новое окно");
+        JFrame frame = new JFrame("Игра " + gameModel.getCurrentMode());
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Закрытие только этого окна
         frame.add(drawPanel);
         frame.pack();

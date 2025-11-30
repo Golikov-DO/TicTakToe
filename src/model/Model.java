@@ -54,8 +54,8 @@ public class Model {
         return difficulty;
     }
 
-    public String getCurrentMode() {
-        return currentMode;
+    public int getSide() {
+        return side;
     }
 
     public int getWidth() {
@@ -64,6 +64,10 @@ public class Model {
 
     public int getHeight() {
         return height;
+    }
+
+    public String getCurrentMode() {
+        return currentMode;
     }
 
     public int checkWiner() {

@@ -16,6 +16,7 @@ public class Main {
                 // и режим будет установлен в Model.
 
                 // Создаем контроллер и передаем ему модель
+                System.out.println(e);
                 Controller controller = new Controller(model);
 
                 // Создаем игровое окно и передаем ему модель и контроллер

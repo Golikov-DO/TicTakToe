@@ -5,7 +5,6 @@ import model.Model;
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.TitledBorder;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -14,10 +13,8 @@ import java.util.List;
 public class MainWindow {
     private final JFrame frame;
     private final JButton button;
-    private Model gameModel;
 
     public MainWindow(Model gameModel) {
-        this.gameModel = gameModel;
         frame = new JFrame("Крестики Нолики");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(350, 300);
@@ -104,6 +101,7 @@ public class MainWindow {
             item.addItemListener(listener);
         }
         button.addActionListener(e -> {
+            System.out.println(e);
              frame.dispose(); // Закрываем главное окно после выбора
         });
 
@@ -113,18 +111,7 @@ public class MainWindow {
         frame.setVisible(true);                                                         //делаем окно видимым
     }
 
-    public void showWindow() {
-        frame.setVisible(true);
-    }
-
-    public void hideWindow() {
-        frame.setVisible(false);
-    }
-
     public JButton getStartButton() {
         return button;
-    }
-    public void addOpenWindowListener(ActionListener actionListener){
-        button.addActionListener(actionListener);
     }
 }
